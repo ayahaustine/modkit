@@ -1,0 +1,47 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+backend/.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# Alembic
+backend/alembic/versions/__pycache__/
+
+# Node
+node_modules/
+frontend/node_modules/
+docs/node_modules/
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Docusaurus
+docs/.docusaurus/
+docs/build/
+
+# Docker
+infra/certbot/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
