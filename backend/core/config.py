@@ -3,6 +3,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """
+    Application settings loaded from environment variables and .env file.
+
+    DATABASE_URL is auto-derived from APP_ENV when not explicitly set:
+    development -> SQLite (aiosqlite), staging/production -> PostgreSQL (asyncpg).
+    """
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     # App
@@ -17,6 +24,7 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def derive_database_url(self) -> "Settings":
+        """Populate DATABASE_URL from APP_ENV when not explicitly provided."""
         if not self.DATABASE_URL:
             if self.APP_ENV == "development":
                 self.DATABASE_URL = "sqlite+aiosqlite:///./modkit.db"
