@@ -1,23 +1,32 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    """Return a bcrypt hash of the given plaintext password."""
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    """Return True if plain_password matches the stored bcrypt hash."""
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 
 def create_access_token(subject: str | Any) -> str:
+    """
+    Create a short-lived JWT access token.
+
+    Args:
+        subject: The user identifier to embed as the ``sub`` claim (typically a UUID string).
+
+    Returns:
+        Signed JWT string valid for ACCESS_TOKEN_EXPIRE_MINUTES.
+    """
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -26,6 +35,15 @@ def create_access_token(subject: str | Any) -> str:
 
 
 def create_refresh_token(subject: str | Any) -> str:
+    """
+    Create a long-lived JWT refresh token.
+
+    Args:
+        subject: The user identifier to embed as the ``sub`` claim (typically a UUID string).
+
+    Returns:
+        Signed JWT string valid for REFRESH_TOKEN_EXPIRE_DAYS.
+    """
     expire = datetime.now(timezone.utc) + timedelta(
         days=settings.REFRESH_TOKEN_EXPIRE_DAYS
     )

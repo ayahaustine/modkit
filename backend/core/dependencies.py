@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 
 from fastapi import Cookie, Depends, HTTPException, status
@@ -14,6 +15,13 @@ async def get_current_user(
     access_token: Annotated[str | None, Cookie()] = None,
     db: AsyncSession = Depends(get_db),
 ) -> User:
+    """
+    FastAPI dependency that resolves the authenticated user from the access_token cookie.
+
+    Raises:
+        HTTPException 401: If the cookie is missing, the token is invalid, or the user does not exist.
+        HTTPException 403: If the user account is inactive.
+    """
     if not access_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
@@ -21,8 +29,8 @@ async def get_current_user(
         payload = decode_token(access_token)
         if payload.get("type") != "access":
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
-        user_id: str = payload["sub"]
-    except (JWTError, KeyError):
+        user_id = uuid.UUID(payload["sub"])
+    except (JWTError, KeyError, ValueError):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
     repo = UserRepository(db)
