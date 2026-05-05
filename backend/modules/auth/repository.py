@@ -40,7 +40,10 @@ class SessionRepository:
         return session
 
     async def get_by_token(self, refresh_token: str) -> Session | None:
-        """Return the active session matching the refresh token, or None if expired or not found."""
+        """Return the active session matching the refresh token.
+
+        Returns None if the token is expired or not found.
+        """
         token_hash = _hash_token(refresh_token)
         result = await self.db.execute(
             select(Session).where(
@@ -58,7 +61,9 @@ class SessionRepository:
     ) -> Session:
         """Replace the token hash in-place (token rotation)."""
         old_session.token_hash = _hash_token(new_refresh_token)
-        old_session.expires_at = datetime.now(timezone.utc) + timedelta(days=expire_days)
+        old_session.expires_at = datetime.now(timezone.utc) + timedelta(
+            days=expire_days
+        )
         await self.db.flush()
         return old_session
 

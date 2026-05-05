@@ -8,7 +8,7 @@ class RegisterRequest(BaseModel):
     - email: User's email address (must be unique).
     - password: User's password (must be at least 8 characters).
     - full_name: Optional full name of the user.
-    
+
     """
 
     email: EmailStr

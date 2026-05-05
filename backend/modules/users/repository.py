@@ -22,7 +22,9 @@ class UserRepository:
         result = await self.db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
-    async def create(self, email: str, hashed_password: str, full_name: str | None = None) -> User:
+    async def create(
+        self, email: str, hashed_password: str, full_name: str | None = None
+    ) -> User:
         """Insert a new user and return the persisted instance."""
         user = User(email=email, hashed_password=hashed_password, full_name=full_name)
         self.db.add(user)

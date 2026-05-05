@@ -1,4 +1,5 @@
 """Integration tests for the /api/v1/auth endpoints."""
+
 import pytest
 from httpx import AsyncClient
 
@@ -15,7 +16,11 @@ class TestRegister:
     async def test_register_success(self, client: AsyncClient) -> None:
         resp = await client.post(
             f"{BASE}/register",
-            json={"email": VALID_EMAIL, "password": VALID_PASSWORD, "full_name": "Alice"},
+            json={
+                "email": VALID_EMAIL,
+                "password": VALID_PASSWORD,
+                "full_name": "Alice",
+            },
         )
         assert resp.status_code == 201
         body = resp.json()
@@ -97,14 +102,16 @@ class TestRefresh:
         # Extract the refresh token from the Set-Cookie header to send it manually.
         set_cookies = login_resp.headers.get_list("set-cookie")
         refresh_token_value = next(
-            (h.split("=", 1)[1].split(";")[0] for h in set_cookies if h.startswith("refresh_token")),
+            (
+                h.split("=", 1)[1].split(";")[0]
+                for h in set_cookies
+                if h.startswith("refresh_token")
+            ),
             None,
         )
-        old_access_value = next(
-            (h.split("=", 1)[1].split(";")[0] for h in set_cookies if h.startswith("access_token")),
-            None,
+        assert refresh_token_value is not None, (
+            "Login did not set a refresh_token cookie"
         )
-        assert refresh_token_value is not None, "Login did not set a refresh_token cookie"
 
         refresh_resp = await client.post(
             f"{BASE}/refresh",
@@ -113,14 +120,20 @@ class TestRefresh:
         assert refresh_resp.status_code == 200
         new_set_cookies = refresh_resp.headers.get_list("set-cookie")
         new_access_value = next(
-            (h.split("=", 1)[1].split(";")[0] for h in new_set_cookies if h.startswith("access_token")),
+            (
+                h.split("=", 1)[1].split(";")[0]
+                for h in new_set_cookies
+                if h.startswith("access_token")
+            ),
             None,
         )
         assert new_access_value is not None
         # Verify the new token is a well-formed JWT (three dot-separated segments).
         assert new_access_value.count(".") == 2
 
-    async def test_refresh_without_cookie_returns_401(self, client: AsyncClient) -> None:
+    async def test_refresh_without_cookie_returns_401(
+        self, client: AsyncClient
+    ) -> None:
         # Client has no cookies yet
         fresh_client = AsyncClient(
             transport=client._transport,  # type: ignore[attr-defined]
