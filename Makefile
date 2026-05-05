@@ -26,7 +26,7 @@ dev-docs: ## Run docs dev server
 
 # ── Docker ────────────────────────────────────────────────────────────────────
 up: ## Start all services (dev mode)
-	$(COMPOSE_DEV) up --build
+	$(COMPOSE_DEV) up -d --build
 
 down: ## Stop all services
 	$(COMPOSE_DEV) down
