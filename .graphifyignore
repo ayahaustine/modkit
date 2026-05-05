@@ -1,0 +1,7 @@
+# .graphifyignore
+frontend/node_modules
+dist/
+*.generated.py
+
+.venv/
+backend/.venv

@@ -10,7 +10,9 @@ class Settings(BaseSettings):
     development -> SQLite (aiosqlite), staging/production -> PostgreSQL (asyncpg).
     """
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", 
+                                      env_file_encoding="utf-8", 
+                                      ignore_extra=True)
 
     # App
     APP_ENV: str = "development"  # development | staging | production

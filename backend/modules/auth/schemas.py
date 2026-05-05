@@ -2,7 +2,14 @@ from pydantic import BaseModel, EmailStr, field_validator
 
 
 class RegisterRequest(BaseModel):
-    """Payload for the registration endpoint."""
+    """
+    Payload for the registration endpoint.
+    contains:
+    - email: User's email address (must be unique).
+    - password: User's password (must be at least 8 characters).
+    - full_name: Optional full name of the user.
+    
+    """
 
     email: EmailStr
     password: str
@@ -18,13 +25,22 @@ class RegisterRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    """Payload for the login endpoint."""
+    """
+    Payload for the login endpoint.
+    contains:
+    - email: User's email address.
+    - password: User's password.
+    """
 
     email: EmailStr
     password: str
 
 
 class TokenResponse(BaseModel):
-    """Response body returned after a successful auth operation."""
+    """
+    Response body returned after a successful auth operation.
+    contains:
+    - message: Status message.
+    """
 
     message: str = "ok"
