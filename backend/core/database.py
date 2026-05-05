@@ -19,6 +19,11 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """
+    FastAPI dependency that yields an AsyncSession per request.
+
+    Commits on success, rolls back and re-raises on any exception.
+    """
     async with AsyncSessionLocal() as session:
         try:
             yield session

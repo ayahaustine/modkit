@@ -20,6 +20,7 @@ _COOKIE_OPTS = dict(
 
 
 def _set_tokens(response: Response, access_token: str, refresh_token: str) -> None:
+    """Write access_token and refresh_token as httpOnly cookies on the response."""
     response.set_cookie(
         "access_token",
         access_token,
@@ -37,6 +38,7 @@ def _set_tokens(response: Response, access_token: str, refresh_token: str) -> No
 
 
 def _clear_tokens(response: Response) -> None:
+    """Remove auth cookies from the response on logout."""
     response.delete_cookie("access_token", path="/")
     response.delete_cookie("refresh_token", path="/api/auth")
 

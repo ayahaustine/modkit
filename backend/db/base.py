@@ -3,10 +3,12 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
-    pass
+    """SQLAlchemy declarative base shared by all ORM models."""
 
 
 class TimestampMixin:
+    """Mixin that adds created_at and updated_at columns to any model."""
+
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

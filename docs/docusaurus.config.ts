@@ -27,7 +27,7 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'fr', 'es'],
   },
 
   presets: [
@@ -84,8 +84,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/your-org/modkit',
-          label: 'GitHub',
+          type: 'localeDropdown',
           position: 'right',
         },
       ],
@@ -128,12 +127,12 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/your-org/modkit',
+              href: 'https://github.com/ayahaustine/modkit',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} ModKit. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} ModKit.`,
     },
     prism: {
       theme: prismThemes.github,

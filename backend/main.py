@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
 from modules.auth.router import router as auth_router
-from modules.billing.router import router as billing_router
 from modules.users.router import router as users_router
 
 app = FastAPI(
@@ -25,9 +24,10 @@ app.add_middleware(
 API_PREFIX = "/api"
 app.include_router(auth_router, prefix=API_PREFIX)
 app.include_router(users_router, prefix=API_PREFIX)
-app.include_router(billing_router, prefix=API_PREFIX)
+
 
 
 @app.get("/api/health")
 async def health() -> dict:
+    """Return service liveness status and current version."""
     return {"status": "ok", "version": settings.APP_VERSION}
