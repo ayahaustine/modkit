@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated
 
 from core.config import settings
 from core.database import get_db

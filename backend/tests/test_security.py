@@ -1,4 +1,5 @@
 """Unit tests for core.security — password hashing and JWT helpers."""
+
 import pytest
 from jose import JWTError
 

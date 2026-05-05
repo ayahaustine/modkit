@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from core.dependencies import CurrentUser
 from modules.users.schemas import UserOut

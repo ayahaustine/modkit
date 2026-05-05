@@ -38,7 +38,10 @@ class AuthService:
         """Register a new user. Raises HTTP 409 if the email is already taken."""
         existing = await self.users.get_by_email(data.email)
         if existing:
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Email already registered",
+            )
 
         user = await self.users.create(
             email=data.email,
@@ -65,7 +68,10 @@ class AuthService:
                 detail="Invalid credentials",
             )
         if not user.is_active:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Inactive user",
+            )
 
         access_token = create_access_token(str(user.id))
         refresh_token = create_refresh_token(str(user.id))
@@ -85,7 +91,8 @@ class AuthService:
         session = await self.sessions.get_by_token(old_refresh_token)
         if not session:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired refresh token"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired refresh token",
             )
 
         new_access = create_access_token(str(session.user_id))
