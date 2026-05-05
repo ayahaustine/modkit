@@ -16,6 +16,12 @@ from modules.users.schemas import UserOut
 
 
 class AuthService:
+    """
+    Orchestrates authentication flows: register, login, token refresh, and logout.
+
+    One instance per request.
+    """
+
     def __init__(self, db: AsyncSession, request: Request) -> None:
         self.db = db
         self.request = request
@@ -23,11 +29,13 @@ class AuthService:
         self.sessions = SessionRepository(db)
 
     def _client_meta(self) -> tuple[str | None, str | None]:
+        """Return (user_agent, ip_address) extracted from the current request."""
         user_agent = self.request.headers.get("user-agent")
         ip = self.request.client.host if self.request.client else None
         return user_agent, ip
 
     async def register(self, data: RegisterRequest) -> UserOut:
+        """Register a new user. Raises HTTP 409 if the email is already taken."""
         existing = await self.users.get_by_email(data.email)
         if existing:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
@@ -40,6 +48,16 @@ class AuthService:
         return UserOut.model_validate(user)
 
     async def login(self, data: LoginRequest) -> tuple[User, str, str]:
+        """
+        Validate credentials and create a session.
+
+        Returns:
+            Tuple of (user, access_token, refresh_token).
+
+        Raises:
+            HTTPException 401: If credentials are invalid.
+            HTTPException 403: If the account is inactive.
+        """
         user = await self.users.get_by_email(data.email)
         if not user or not verify_password(data.password, user.hashed_password):
             raise HTTPException(
@@ -79,6 +97,7 @@ class AuthService:
         return new_access, new_refresh
 
     async def logout(self, refresh_token: str) -> None:
+        """Delete the session for the given refresh token if it exists."""
         session = await self.sessions.get_by_token(refresh_token)
         if session:
             await self.sessions.delete(session)

@@ -9,10 +9,13 @@ from modules.auth.models import Session
 
 
 def _hash_token(token: str) -> str:
+    """Return the SHA-256 hex digest of token, used for safe DB storage."""
     return hashlib.sha256(token.encode()).hexdigest()
 
 
 class SessionRepository:
+    """Data-access layer for refresh-token sessions."""
+
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
@@ -24,6 +27,7 @@ class SessionRepository:
         user_agent: str | None = None,
         ip_address: str | None = None,
     ) -> Session:
+        """Persist a new session for the given refresh token and return it."""
         session = Session(
             user_id=user_id,
             token_hash=_hash_token(refresh_token),
@@ -36,6 +40,7 @@ class SessionRepository:
         return session
 
     async def get_by_token(self, refresh_token: str) -> Session | None:
+        """Return the active session matching the refresh token, or None if expired or not found."""
         token_hash = _hash_token(refresh_token)
         result = await self.db.execute(
             select(Session).where(
@@ -58,9 +63,11 @@ class SessionRepository:
         return old_session
 
     async def delete(self, session: Session) -> None:
+        """Delete a single session (logout from one device)."""
         await self.db.delete(session)
         await self.db.flush()
 
     async def delete_all_for_user(self, user_id: uuid.UUID) -> None:
+        """Delete all sessions for a user (logout everywhere)."""
         await self.db.execute(delete(Session).where(Session.user_id == user_id))
         await self.db.flush()
