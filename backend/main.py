@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from admin import create_admin
 from core.config import settings
 from modules.auth.router import router as auth_router
 from modules.users.router import router as users_router
@@ -27,6 +28,7 @@ app.add_middleware(
 app.include_router(auth_router, prefix=API_PREFIX)
 app.include_router(users_router, prefix=API_PREFIX)
 
+create_admin().mount_to(app)
 
 
 @app.get(f"{API_PREFIX}/health")

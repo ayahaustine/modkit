@@ -50,6 +50,9 @@ migrate-create: ## Create a new migration (make migrate-create msg="description"
 migrate-down: ## Rollback one migration
 	cd backend && uv run alembic downgrade -1
 
+create-superuser: ## Create or promote a superuser account
+	docker exec -it modkit-backend-1 python scripts/create_superuser.py
+
 # ── Quality ───────────────────────────────────────────────────────────────────
 lint: ## Lint backend with ruff
 	cd backend && uv run ruff check . && uv run ruff format --check .
