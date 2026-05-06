@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'ModKit',
-  tagline: 'Full-stack starter template — FastAPI · Next.js · PostgreSQL',
+  title: 'modkit',
+  tagline: 'FastAPI · Next.js · PostgreSQL — production-ready from day one.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -20,14 +20,20 @@ const config: Config = {
   organizationName: 'your-org',
   projectName: 'modkit',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'fr', 'es'],
+    locales: ['en', 'fr', 'es', 'de'],
+    localeConfigs: {
+      en: {label: 'English', direction: 'ltr'},
+      fr: {label: 'Français', direction: 'ltr'},
+      es: {label: 'Español', direction: 'ltr'},
+      de: {label: 'Deutsch', direction: 'ltr'},
+    },
   },
 
   presets: [
@@ -36,10 +42,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
           showReadingTime: true,
@@ -47,10 +49,6 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -64,17 +62,13 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/modkit-og.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'ModKit',
-      logo: {
-        alt: 'ModKit Logo',
-        src: 'img/logo.svg',
-      },
+      title: 'modkit',
+      hideOnScroll: false,
       items: [
         {
           type: 'docSidebar',
@@ -84,13 +78,18 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
+          href: 'https://github.com/ayahaustine/modkit',
+          label: 'GitHub',
+          position: 'right',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: 'light',
       links: [
         {
           title: 'Docs',
@@ -102,37 +101,20 @@ const config: Config = {
           ],
         },
         {
-          title: 'Community',
+          title: 'Links',
           items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
             {
               label: 'GitHub',
               href: 'https://github.com/ayahaustine/modkit',
             },
+            {
+              label: 'Blog',
+              to: '/blog',
+            },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} ModKit.`,
+      copyright: `© ${new Date().getFullYear()} modkit`,
     },
     prism: {
       theme: prismThemes.github,

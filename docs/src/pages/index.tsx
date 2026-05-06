@@ -1,5 +1,4 @@
 import type {ReactNode} from 'react';
-import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
@@ -11,17 +10,20 @@ import styles from './index.module.css';
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
+    <header className={styles.heroBanner}>
       <div className="container">
-        <Heading as="h1" className="hero__title">
+        <Heading as="h1" className={styles.heroTitle}>
           {siteConfig.title}
         </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <p className={styles.heroTagline}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
+          <Link className={styles.primaryButton} to="/docs/intro">
+            Get started
+          </Link>
           <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
+            className={styles.secondaryButton}
+            href="https://github.com/ayahaustine/modkit">
+            GitHub
           </Link>
         </div>
       </div>
@@ -32,9 +34,7 @@ function HomepageHeader() {
 export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+    <Layout title={siteConfig.title} description={siteConfig.tagline}>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
