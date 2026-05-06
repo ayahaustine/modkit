@@ -1,16 +1,22 @@
-# Overrides for local development — SQLite, hot reload, exposed ports
+# Standalone dev compose — SQLite, hot reload, direct ports, no nginx
 
 services:
   backend:
     build:
       context: ./backend
+      dockerfile: Dockerfile
       target: base
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
     volumes:
       - ./backend:/app
       - sqlite_dev:/app/data
     environment:
       APP_ENV: development
+      JWT_SECRET_KEY: change-me-in-development
+      COOKIE_SECURE: "false"
+      COOKIE_DOMAIN: localhost
+      CORS_ORIGINS: '["http://localhost:3000"]'
       DATABASE_URL: sqlite+aiosqlite:////app/data/modkit.db
       DEBUG: "true"
     ports:
@@ -19,15 +25,19 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: deps
-    command: sh -c "npm run dev"
-    working_dir: /app
+      dockerfile: Dockerfile
+      target: dev
+    restart: unless-stopped
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/next.config.ts:/app/next.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/postcss.config.mjs:/app/postcss.config.mjs
+      - ./frontend/eslint.config.mjs:/app/eslint.config.mjs
+      - ./frontend/.env.local:/app/.env.local
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      NEXT_TELEMETRY_DISABLED: "1"
     ports:
       - "3000:3000"
 
@@ -35,12 +45,16 @@ services:
     build:
       context: ./docs
       dockerfile: Dockerfile
-      target: deps
-    command: npm start -- --port 3001 --host 0.0.0.0
-    working_dir: /app
+      target: dev
+    restart: unless-stopped
     volumes:
-      - ./docs:/app
-      - /app/node_modules
+      - ./docs/docs:/app/docs
+      - ./docs/blog:/app/blog
+      - ./docs/src:/app/src
+      - ./docs/static:/app/static
+      - ./docs/i18n:/app/i18n
+      - ./docs/docusaurus.config.ts:/app/docusaurus.config.ts
+      - ./docs/sidebars.ts:/app/sidebars.ts
     ports:
       - "3001:3001"
 

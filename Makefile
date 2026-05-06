@@ -1,7 +1,7 @@
 .PHONY: help install dev build up down logs migrate migrate-create lint test
 
 COMPOSE      = docker compose
-COMPOSE_DEV  = $(COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml
+COMPOSE_DEV  = $(COMPOSE) -f docker-compose.dev.yml
 COMPOSE_PROD = $(COMPOSE) -f docker-compose.yml -f docker-compose.prod.yml
 
 # ── Help ──────────────────────────────────────────────────────────────────────
@@ -14,6 +14,7 @@ install: ## Install all dependencies (uv + npm)
 	cd backend && uv sync
 	cd frontend && npm install
 	cd docs && npm install
+	cd e2e && npm install
 
 dev-backend: ## Run backend dev server
 	cd backend && uv run uvicorn main:app --reload --port 8000
@@ -72,3 +73,16 @@ build: ## Build all Docker images
 
 build-docs: ## Build docs static site
 	cd docs && npm run build
+
+# ── E2E ───────────────────────────────────────────────────────────────────────
+e2e: ## Run Playwright e2e tests (stack must be running)
+	cd e2e && npm test
+
+e2e-headed: ## Run e2e tests in headed mode
+	cd e2e && npm run test:headed
+
+e2e-ui: ## Open Playwright UI runner
+	cd e2e && npm run test:ui
+
+e2e-report: ## Show the last Playwright HTML report
+	cd e2e && npm run test:report
