@@ -5,52 +5,52 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  icon: string;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'FastAPI Backend',
+    icon: '⚡',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Async Python with SQLAlchemy, Alembic migrations, JWT auth, and a
+        built-in starlette-admin panel — ready to extend.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Next.js Frontend',
+    icon: '◊',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        App Router, TypeScript, Tailwind CSS, and httpOnly cookie auth.
+        Ships as a standalone Docker image.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Production Ready',
+    icon: '◎',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Docker Compose, PostgreSQL, nginx reverse proxy, and GitHub Actions
+        CI with coverage reporting out of the box.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, icon, description}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+      <div className={styles.featureCard}>
+        <div className={styles.featureIcon}>{icon}</div>
+        <Heading as="h3" className={styles.featureTitle}>
+          {title}
+        </Heading>
+        <p className={styles.featureDesc}>{description}</p>
       </div>
     </div>
   );
