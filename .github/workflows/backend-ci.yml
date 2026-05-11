@@ -63,7 +63,7 @@ jobs:
 
       - name: Coverage summary (PR comment)
         if: github.event_name == 'pull_request'
-        uses: orgoro/coverage@v3.2
+        uses: orgoro/coverage@v3.3
         with:
           coverageFile: backend/coverage.xml
           token: ${{ secrets.GITHUB_TOKEN }}
